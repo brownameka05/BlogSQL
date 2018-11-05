@@ -2,9 +2,22 @@ const express = require('express')
 const mustacheExpress = require('mustache-express')
 const bodyParser = require('body-parser')
 const app = express()
+var session = require('express-session')
 const pgp = require('pg-promise')()
 const connectionString = "postgres://localhost:5432/blogsdb"
 const db = pgp(connectionString)
+
+let username = [
+  {username : "AmekaBrown", password : "password"}
+]
+
+let blogs = []
+
+app.use(session({
+  secret: 'cat',
+  resave: false,
+  saveUninitialized: false
+}))
 
 
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -15,13 +28,32 @@ app.set('view engine','mustache')
 
 app.use(bodyParser.json())
 
-// app.post('/blogs', function(req,res){
-//   let blogid = req.body.blogid
-//
-//   db.none
-// })
+app.post("/login", function(req,res){
+  let username = req.body.username
+  let password = req.body.password
+  if(username == "AmekaBrown" && password == "password"){
+    if(req.session){
+      req.session.username = username
+      res.redirect("/blogs")
+    }
+  }
+})
+
+app.get("/login", function (req,res){
+  res.render("login")
+})
 
 
+
+
+app.post('/deleteAPost', function(req,res){
+  let blogid = req.body.blogid
+
+  db.none('DELETE FROM blogs WHERE blogid = $1;',[blogid])
+  .then(function(){
+    res.redirect('/blogs')
+  })
+})
 
 
 app.post('/blogs', function(req,res){

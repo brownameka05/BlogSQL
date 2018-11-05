@@ -26,12 +26,22 @@
     </form>
 
   <h1> Blogs</h1>
+  
+
   <ul>
     {{#blogs}}
+
     <li>
       <h2>{{name}}</h2>
       <div>{{title}}</div>
       <div>{{content}}</div>
+
+      <form action="/deleteAPost" method="POST">
+        <input type="hidden" name="blogid" value="{{blogid}}" />
+        <div> <input type="submit" value="Delete"/>
+      </form>
+
+    </li>
     {{/blogs}}
 
   </ul>
