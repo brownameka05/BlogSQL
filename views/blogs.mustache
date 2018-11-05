@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+
+  <h1> Post New Blog</h1>
+
+  <!-- <div>
+    <a href="/dishes">View All Dishes</a>
+    <a href="/dishes/new">Add New Dish</a>
+  </div> -->
+
+
+    <form action="/blogs" method="POST">
+      <input type="text" name="name" placeholder="Blogger Name"/>
+      <input type="text" name="title" placeholder="Blog Title"/>
+      <input type="text" name="content" placeholder="Blog Content"/>
+      <select name="Category">
+        <option value="Tech">Technology</option>
+        <option value="Music">Music</option>
+        <option value="Movies">Movies</option>
+      </select>
+      <input type="submit" value="Post"/>
+    </form>
+
+  <h1> Blogs</h1>
+  <ul>
+    {{#blogs}}
+    <li>
+      <h2>{{name}}</h2>
+      <div>{{title}}</div>
+      <div>{{content}}</div>
+    {{/blogs}}
+
+  </ul>
+
+
+  <body>
+
+  </body>
+</html>
