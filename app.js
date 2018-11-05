@@ -20,6 +20,7 @@ app.use(session({
 }))
 
 
+
 app.use(bodyParser.urlencoded({ extended: false }))
 
 app.engine('mustache',mustacheExpress())
@@ -46,6 +47,8 @@ app.get("/login", function (req,res){
 
 
 
+
+
 app.post('/deleteAPost', function(req,res){
   let blogid = req.body.blogid
 
@@ -66,9 +69,7 @@ app.post('/blogs', function(req,res){
     res.redirect('/blogs')
   })
 })
-// app.get('/blogs/new',function(req,res){
-//   res.render('add-blog')
-// }) this will take u to the new page for adding blog ....don't need just keep on same page
+
 
 
 app.get('/blogs', function(req,res){
