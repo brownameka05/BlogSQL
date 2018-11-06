@@ -7,17 +7,11 @@ const pgp = require('pg-promise')()
 const connectionString = "postgres://localhost:5432/blogsdb"
 const db = pgp(connectionString)
 
-let username = [
-  {username : "AmekaBrown", password : "password"}
-]
 
 let blogs = []
 
-app.use(session({
-  secret: 'cat',
-  resave: false,
-  saveUninitialized: false
-}))
+
+
 
 
 
@@ -29,20 +23,35 @@ app.set('view engine','mustache')
 
 app.use(bodyParser.json())
 
-app.post("/login", function(req,res){
-  let username = req.body.username
-  let password = req.body.password
-  if(username == "AmekaBrown" && password == "password"){
-    if(req.session){
-      req.session.username = username
-      res.redirect("/blogs")
-    }
-  }
+
+
+app.get('/blogs/:blogid',function(req,res){
+  let blogid = req.params.blogid
+
+  db.any('SELECT title,comment FROM reviews WHERE blogid = $1;',[blogid])
+  .then(function(results){
+    console.log(results)
+    res.render('blog-comments', {blogid: blogid,reviews : results})
+  })
 })
 
-app.get("/login", function (req,res){
-  res.render("login")
+
+
+app.post('/blogs/:blogid', function(req,res){
+  let title = req.body.title
+  let comment = req.body.comment
+  let blogid = req.body.blogid
+  db.none('INSERT INTO reviews(title,comment,blogid) VALUES($1,$2,$3)',[title,comment,blogid])
+  .then(function(){
+    res.redirect('/blogs/'+ blogid)
+  })
 })
+
+
+
+
+
+
 
 
 
@@ -59,6 +68,9 @@ app.post('/deleteAPost', function(req,res){
 })
 
 
+
+
+
 app.post('/blogs', function(req,res){
   let name = req.body.name
   let title = req.body.title
@@ -71,7 +83,6 @@ app.post('/blogs', function(req,res){
 })
 
 
-
 app.get('/blogs', function(req,res){
   db.any('SELECT blogid,name,title,content FROM blogs;')
   .then(function(result){
@@ -80,8 +91,6 @@ app.get('/blogs', function(req,res){
 
   })
 })
-
-
 
 
 
